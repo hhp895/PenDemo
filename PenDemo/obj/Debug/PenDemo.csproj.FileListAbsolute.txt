@@ -1,0 +1,16 @@
+E:\罗博点阵笔开发\PenDemo\PenDemo\bin\Debug\PenDemo.exe
+E:\罗博点阵笔开发\PenDemo\PenDemo\bin\Debug\PenDemo.pdb
+E:\罗博点阵笔开发\PenDemo\PenDemo\bin\Debug\robotpenetdevice_cs.dll
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.csprojResolveAssemblyReference.cache
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\MainWindow.g.cs
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\App.g.cs
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo_Content.g.cs
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo_MarkupCompile.cache
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo_MarkupCompile.lref
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\MainWindow.baml
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.g.resources
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.Properties.Resources.resources
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.csproj.GenerateResource.Cache
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.exe
+E:\罗博点阵笔开发\PenDemo\PenDemo\obj\Debug\PenDemo.pdb
+E:\罗博点阵笔开发\PenDemo\PenDemo\bin\Debug\PenDemo.exe.config
