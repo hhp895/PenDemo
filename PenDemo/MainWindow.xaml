@@ -58,6 +58,7 @@
             <ComboBox x:Name="cbIps" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21"/>
             <Button x:Name="btnStart">开始</Button>
             <Button x:Name="btnTest">Test</Button>
+            <Button x:Name="btnTest2">Test2</Button>
         </StackPanel>
         <ListBox x:Name="lbPenPads"   Grid.Row="1" ItemContainerStyle="{DynamicResource Contents_ListBox_Item}" >
          

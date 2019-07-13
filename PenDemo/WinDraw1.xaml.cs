@@ -26,9 +26,9 @@ namespace PenDemo
     /// <summary>
     /// WinDraw.xaml 的交互逻辑
     /// </summary>
-    public partial class WinDraw : Window
+    public partial class WinDraw1 : Window
     {
-        private static WinDraw instance;
+        private static WinDraw1 instance;
       
         private PathGeometry pathGeometry;
         private List<PenStroke> penStrokes;
@@ -37,11 +37,11 @@ namespace PenDemo
         private Point m_point;
         private int m_nPenStatus = 0;
         private Path path;
-        public static WinDraw getInstance()
+        public static WinDraw1 getInstance()
         {
             if (instance == null)
             {
-                instance = new WinDraw();
+                instance = new WinDraw1();
                 instance.WindowState = WindowState.Maximized;
                 instance.Activate();
             }
@@ -49,7 +49,7 @@ namespace PenDemo
             return instance;
         }
 
-        public WinDraw()
+        public WinDraw1()
         {
             InitializeComponent();
 
@@ -116,8 +116,7 @@ namespace PenDemo
             path.StrokeThickness = sliderPenWidth.Value;
           
             pathGeometry = new PathGeometry();
-            pathFigure = new PathFigure();
-            pathGeometry.Figures.Add(pathFigure);
+          
 
             path.Data = pathGeometry;
             canvas.Children.Add(path);
@@ -162,10 +161,12 @@ namespace PenDemo
             {
                 if (points.Count == 0)
                 {
-                  
+                    pathFigure = new PathFigure();
+                    pathGeometry.Figures.Add(pathFigure);
                     pathFigure.StartPoint = p;
                     IsHaveLastPoint = true;
                     startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
+                   
                 }
 
                 double distance = 0;
@@ -270,28 +271,32 @@ namespace PenDemo
         }
         private void drawLine(Point p1, Point p2)
         {
-            //
-            //            List<Point> controlPoints = BezierHelper.getControlPoints(0.4, p1, p2);
-            //            if (isHaveLastControlPoint == false)
-            //            {
-            //                lastControlPoint = p1;
-            //                isHaveLastControlPoint = true;
-            //            }
-            //         
-            //            QuadraticBezierSegment bezierSegment = new QuadraticBezierSegment(p1, controlPoints[0],  true);
+            
+                        List<Point> controlPoints = BezierHelper.getControlPoints(0.4, p1, p2);
+                        if (isHaveLastControlPoint == false)
+                        {
+                            lastControlPoint = p1;
+                            isHaveLastControlPoint = true;
+                        }
+                     
+                        QuadraticBezierSegment bezierSegment = new QuadraticBezierSegment(p1, controlPoints[0],  true);
 
-            //            lastControlPoint = controlPoints[1];
-            //            pathFigure.Segments.Add(bezierSegment);
-            //LineSegment lineSegment = new LineSegment(controlPoints[1], true);
-            //pathFigure.Segments.Add(lineSegment);
-            if (isHaveLastControlPoint == false)
-            {
-                lastControlPoint = p1;
-                isHaveLastControlPoint = true;
-            }
-            LineSegment lineSegment=new LineSegment(p2,true);
-
+                        lastControlPoint = controlPoints[1];
+                        pathFigure.Segments.Add(bezierSegment);
+            LineSegment lineSegment = new LineSegment(controlPoints[1], true);
             pathFigure.Segments.Add(lineSegment);
+
+
+
+
+//            if (isHaveLastControlPoint == false)
+//            {
+//                lastControlPoint = p1;
+//                isHaveLastControlPoint = true;
+//            }
+//            LineSegment lineSegment=new LineSegment(p2,true);
+//
+//            pathFigure.Segments.Add(lineSegment);
 //            Graphics.FromHwnd(this)
             
         }

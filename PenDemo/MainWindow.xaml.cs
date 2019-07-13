@@ -31,7 +31,7 @@ namespace PenDemo
         private bool isStart = false;
         private List<Device> devices;
 
-        public WinDraw winDraw = null;
+        public WinDraw3 WinDraw3 = null;
 
         public MainWindow()
         {
@@ -51,6 +51,7 @@ namespace PenDemo
         {
             this.btnStart.Click += BtnStart_Click;
             this.btnTest.Click += BtnTest_Click;
+            this.btnTest2.Click += BtnTest2_Click;
 
 
             dispatcherTimer = new DispatcherTimer();
@@ -64,7 +65,11 @@ namespace PenDemo
             WinDrawTest winDrawTest = new WinDrawTest();
             winDrawTest.Show();
         }
-
+        private void BtnTest2_Click(object sender, RoutedEventArgs e)
+        {
+            WinDrawTest2 winDrawTest2 = new WinDrawTest2();
+            winDrawTest2.Show();
+        }
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (isStart)
@@ -129,9 +134,9 @@ namespace PenDemo
             Console.WriteLine("DeviceMac:{0},status:{1},x:{2},y:{3},up:{4}", sMac, npenStatus, ux, uy, up);
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (winDraw.Visibility == Visibility.Visible)
+                if (WinDraw3.Visibility == Visibility.Visible)
                 {
-                    winDraw.drawLine(npenStatus, ux/22, uy/22, up);
+                    WinDraw3.drawLine(npenStatus, ux/22, uy/22, up);
                 }
             }));
         }
@@ -169,7 +174,7 @@ namespace PenDemo
 
         private void initView()
         {
-            winDraw = WinDraw.getInstance();
+            WinDraw3 = WinDraw3.getInstance();
 
 
             string HostName = Dns.GetHostName();
@@ -200,7 +205,7 @@ namespace PenDemo
             ListBoxItem item = sender as ListBoxItem;
             Console.WriteLine("" + item.Content);
 
-            winDraw.Show();
+            WinDraw3.Show();
             this.WindowState=WindowState.Minimized;
         }
     }
