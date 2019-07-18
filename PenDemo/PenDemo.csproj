@@ -81,11 +81,20 @@
     </ApplicationDefinition>
     <Compile Include="Model\PenStroke.cs" />
     <Compile Include="Util\BezierHelper.cs" />
+    <Compile Include="WinDraw4.xaml.cs">
+      <DependentUpon>WinDraw4.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDraw3.xaml.cs">
       <DependentUpon>WinDraw3.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinDraw2.xaml.cs">
       <DependentUpon>WinDraw2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinDrawTest4.xaml.cs">
+      <DependentUpon>WinDrawTest4.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinDrawTest3.xaml.cs">
+      <DependentUpon>WinDrawTest3.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinDrawTest2.xaml.cs">
       <DependentUpon>WinDrawTest2.xaml</DependentUpon>
@@ -108,11 +117,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WinDraw4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="WinDraw3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WinDraw2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinDrawTest4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinDrawTest3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

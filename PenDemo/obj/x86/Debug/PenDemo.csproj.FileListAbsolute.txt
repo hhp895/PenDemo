@@ -43,3 +43,10 @@ C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\PenDemo.Properties.Resources.resource
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\PenDemo.csproj.GenerateResource.Cache
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\PenDemo.exe
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\PenDemo.pdb
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\PenDemo.csprojResolveAssemblyReference.cache
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest3.g.cs
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest3.baml
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest4.g.cs
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest4.baml
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw4.g.cs
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw4.baml

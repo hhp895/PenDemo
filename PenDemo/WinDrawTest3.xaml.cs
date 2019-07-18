@@ -26,21 +26,22 @@ namespace PenDemo
     /// <summary>
     /// WinDraw.xaml 的交互逻辑
     /// </summary>
-    public partial class WinDraw3 : Window
+    public partial class WinDrawTest3 : Window
     {
-        private static WinDraw3 instance;
-        private GeometryGroup geometryGroup;
+        private static WinDrawTest3 instance;
+
+        private PathGeometry pathGeometry;
         private List<PenStroke> penStrokes;
 
         private List<Point> points;
         private Point m_point;
         private int m_nPenStatus = 0;
         private Path path;
-        public static WinDraw3 getInstance()
+        public static WinDrawTest3 getInstance()
         {
             if (instance == null)
             {
-                instance = new WinDraw3();
+                instance = new WinDrawTest3();
                 instance.WindowState = WindowState.Maximized;
                 instance.Activate();
             }
@@ -48,7 +49,7 @@ namespace PenDemo
             return instance;
         }
 
-        public WinDraw3()
+        public WinDrawTest3()
         {
             InitializeComponent();
 
@@ -60,14 +61,69 @@ namespace PenDemo
         {
             this.btnReplay.Click += BtnReplay_Click;
             this.btnClear.Click += BtnClear_Click;
-
+            this.PreviewMouseLeftButtonDown += Canvas_PreviewMouseDown;
+            this.PreviewMouseMove += Canvas_PreviewMouseMove;
+            this.PreviewMouseLeftButtonUp += Canvas_PreviewMouseUp;
         }
 
+        private void Canvas_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Canvas_PreviewMouseUp");
+            if (points.Count > 0)
+            {
+                //                    Console.WriteLine(DateTime.Now.Ticks);
+                endTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
+                var penStroke = new PenStroke { points = points };
+                penStroke.startTime = startTime;
+                penStroke.endTime = endTime;
+         
+                penStrokes.Add(penStroke);
+
+            }
+
+            isHaveLastControlPoint = false;
+            index = 0;
+            points = new List<Point>();
+            IsHaveLastPoint = false;
+
+            isPress = false;
+        }
+
+        private void Canvas_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("Canvas_PreviewMouseMove");
+
+            if (isPress)
+            {
+                Point p = e.GetPosition(canvas);
+                drawLine(oldPoint, p);
+                oldPoint = p;
+                points.Add(p);
+            }
+        }
+
+        private bool isPress = false;
+        private Point oldPoint;
+        private void Canvas_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Canvas_PreviewMouseDown");
+            if (!isPress)
+            {
+                isPress = true;
+                oldPoint = e.GetPosition(canvas);
+                createPath(new Random().Next(20));
+                pathFigure = new PathFigure();
+                pathFigure.StartPoint = isHaveLastControlPoint ? lastControlPoint : oldPoint;
+                pathGeometry.Figures.Add(pathFigure);
+               
+            }
+            
+        }
 
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
-            geometryGroup.Children.Clear();
+            pathGeometry.Figures.Clear();
         }
 
         private void BtnReplay_Click(object sender, RoutedEventArgs e)
@@ -107,19 +163,20 @@ namespace PenDemo
 
         private void initView()
         {
+            this.WindowState = WindowState.Maximized;
             penStrokes = new List<PenStroke>();
 
             points = new List<Point>();
+            createPath(5);
+        }
+
+        private void createPath(double strokeWidth)
+        {
             path = new Path();
             path.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            path.StrokeThickness = sliderPenWidth.Value;
-
-
-
-
-            geometryGroup = new GeometryGroup();
-
-            path.Data = geometryGroup;
+            path.StrokeThickness = strokeWidth;
+            pathGeometry = new PathGeometry();
+            path.Data = pathGeometry;
             canvas.Children.Add(path);
         }
 
@@ -135,51 +192,30 @@ namespace PenDemo
         public void drawLine(int nPenStatus, int x, int y, int nCompress)
         {
             Point p = new Point(x, y);
-            if (!pointIsInvalid(nPenStatus, p))
+          
+            if (points.Count == 0  )
             {
-                return;
+                pathFigure = new PathFigure();
+              
+                IsHaveLastPoint = true;
+                startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
             }
 
-            if (nPenStatus == 0)
+            if (isHaveLastControlPoint)
             {
-                if (points.Count > 0)
-                {
-                    //                    Console.WriteLine(DateTime.Now.Ticks);
-                    endTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
-                    var penStroke = new PenStroke { points = points };
-                    penStroke.startTime = startTime;
-                    penStroke.endTime = endTime;
-                    penStrokes.Add(penStroke);
-
-                }
-
-                isHaveLastControlPoint = false;
-                index = 0;
-                points = new List<Point>();
-                IsHaveLastPoint = false;
+                pathFigure.StartPoint = lastControlPoint;
             }
             else
             {
-                if (IsHaveLastPoint)
-                {
-                    drawLine(lastPoint, p);
-                }
-                if (points.Count == 0)
-                {
-                    IsHaveLastPoint = true;
-                    startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
-
-                }
-
-            
-
-                lastPoint = p;
-                points.Add(p);
-
-
-
+                pathFigure.StartPoint = p;
             }
-
+            points.Add(p);
+           
+            if (IsHaveLastPoint && points.Count > 1)
+            {
+                drawLine(points[points.Count - 2], points[points.Count - 1]);
+            }
+            lastPoint = p;
 
         }
 
@@ -213,30 +249,23 @@ namespace PenDemo
                 lastControlPoint = p1;
                 isHaveLastControlPoint = true;
             }
-            //先画bezier，再画直线
-            //                        QuadraticBezierSegment bezierSegment = new QuadraticBezierSegment(p1, controlPoints[0],  true);
-            //
-            //                        lastControlPoint = controlPoints[1];
-            //                        pathFigure.Segments.Add(bezierSegment);
-            //            LineSegment lineSegment = new LineSegment(controlPoints[1], true);
-            //            pathFigure.Segments.Add(lineSegment);
 
-
-
-            StreamGeometry streamGeometry = new StreamGeometry();
-            using (StreamGeometryContext ctx = streamGeometry.Open())
-            {
-                ctx.BeginFigure(lastControlPoint, false, false);
-                ctx.QuadraticBezierTo(p1,controlPoints[0],true,true);
-                ctx.LineTo(controlPoints[1], true, true);
-
-            }
+            QuadraticBezierSegment bezierSegment = new QuadraticBezierSegment(p1, controlPoints[0], true);
 
             lastControlPoint = controlPoints[1];
-            geometryGroup.Children.Add(streamGeometry);
+            pathFigure.Segments.Add(bezierSegment);
+            LineSegment lineSegment = new LineSegment(controlPoints[1], true);
+            pathFigure.Segments.Add(lineSegment);
+            //if (isHaveLastControlPoint == false)
+            //{
+            //    lastControlPoint = p1;
+            //    isHaveLastControlPoint = true;
+            //}
+            //LineSegment lineSegment=new LineSegment(p2,true);
 
-            
-
+            //pathFigure.Segments.Add(lineSegment);
+            //            Graphics.FromHwnd(this)
+            lastControlPoint = controlPoints[1];
         }
 
 

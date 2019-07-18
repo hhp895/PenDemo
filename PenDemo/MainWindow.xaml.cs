@@ -31,7 +31,7 @@ namespace PenDemo
         private bool isStart = false;
         private List<Device> devices;
 
-        public WinDraw3 WinDraw3 = null;
+        public WinDraw4 WinDraw4 = null;
 
         public MainWindow()
         {
@@ -52,6 +52,8 @@ namespace PenDemo
             this.btnStart.Click += BtnStart_Click;
             this.btnTest.Click += BtnTest_Click;
             this.btnTest2.Click += BtnTest2_Click;
+            this.btnTest3.Click += BtnTest3_Click;
+            this.btnTest4.Click += BtnTest4_Click;
 
 
             dispatcherTimer = new DispatcherTimer();
@@ -67,8 +69,24 @@ namespace PenDemo
         }
         private void BtnTest2_Click(object sender, RoutedEventArgs e)
         {
+            this.WindowState = WindowState.Minimized;
             WinDrawTest2 winDrawTest2 = new WinDrawTest2();
             winDrawTest2.Show();
+            winDrawTest2.Activate();
+        }
+        private void BtnTest3_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+            WinDrawTest3 winDrawTest3 = new WinDrawTest3();
+            winDrawTest3.Show();
+            winDrawTest3.Activate();
+        }
+        private void BtnTest4_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+            WinDrawTest4 winDrawTest4 = new WinDrawTest4();
+            winDrawTest4.Show();
+            winDrawTest4.Activate();
         }
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
@@ -134,9 +152,9 @@ namespace PenDemo
             Console.WriteLine("DeviceMac:{0},status:{1},x:{2},y:{3},up:{4}", sMac, npenStatus, ux, uy, up);
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (WinDraw3.Visibility == Visibility.Visible)
+                if (WinDraw4.Visibility == Visibility.Visible)
                 {
-                    WinDraw3.drawLine(npenStatus, ux/22, uy/22, up);
+                    WinDraw4.drawLine(npenStatus, ux/22, uy/22, up/1024.0f);
                 }
             }));
         }
@@ -174,7 +192,7 @@ namespace PenDemo
 
         private void initView()
         {
-            WinDraw3 = WinDraw3.getInstance();
+            WinDraw4 = WinDraw4.getInstance();
 
 
             string HostName = Dns.GetHostName();
@@ -205,7 +223,7 @@ namespace PenDemo
             ListBoxItem item = sender as ListBoxItem;
             Console.WriteLine("" + item.Content);
 
-            WinDraw3.Show();
+            WinDraw4.Show();
             this.WindowState=WindowState.Minimized;
         }
     }

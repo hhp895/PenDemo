@@ -29,7 +29,7 @@ namespace PenDemo
     public partial class WinDrawTest2 : Window
     {
         private static WinDrawTest2 instance;
-      
+
         private PathGeometry pathGeometry;
         private List<PenStroke> penStrokes;
 
@@ -69,6 +69,23 @@ namespace PenDemo
         private void Canvas_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("Canvas_PreviewMouseUp");
+            if (points.Count > 0)
+            {
+                //                    Console.WriteLine(DateTime.Now.Ticks);
+                endTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
+                var penStroke = new PenStroke { points = points };
+                penStroke.startTime = startTime;
+                penStroke.endTime = endTime;
+         
+                penStrokes.Add(penStroke);
+
+            }
+
+            isHaveLastControlPoint = false;
+            index = 0;
+            points = new List<Point>();
+            IsHaveLastPoint = false;
+
             isPress = false;
         }
 
@@ -81,6 +98,7 @@ namespace PenDemo
                 Point p = e.GetPosition(canvas);
                 drawLine(oldPoint, p);
                 oldPoint = p;
+                points.Add(p);
             }
         }
 
@@ -93,9 +111,11 @@ namespace PenDemo
             {
                 isPress = true;
                 oldPoint = e.GetPosition(canvas);
+                pathFigure = new PathFigure();
+                pathFigure.StartPoint = isHaveLastControlPoint ? lastControlPoint : oldPoint;
+                pathGeometry.Figures.Add(pathFigure);
             }
-
-            DrawingContext drawingContext;
+            
         }
 
 
@@ -106,7 +126,7 @@ namespace PenDemo
 
         private void BtnReplay_Click(object sender, RoutedEventArgs e)
         {
-          
+
             for (int index = 0; index < penStrokes.Count; index++)
             {
                 var penStroke = penStrokes[index];
@@ -115,11 +135,11 @@ namespace PenDemo
                 {
                     if (currentIndex > 0)
                     {
-                        int sleepTime =Convert.ToInt16( penStroke.startTime - penStrokes[currentIndex - 1].endTime);
+                        int sleepTime = Convert.ToInt16(penStroke.startTime - penStrokes[currentIndex - 1].endTime);
                         Thread.Sleep(sleepTime);
                     }
 
-                    int everySleepTime = Convert.ToInt16(penStroke.endTime - penStroke.startTime)/ penStroke.points.Count;
+                    int everySleepTime = Convert.ToInt16(penStroke.endTime - penStroke.startTime) / penStroke.points.Count;
                     for (int i = 0; i < penStroke.points.Count; i++)
                     {
                         var ii = i;
@@ -135,22 +155,22 @@ namespace PenDemo
                     }
                 }));
             }
-           
-          
+
+
         }
 
         private void initView()
         {
+            this.WindowState = WindowState.Maximized;
             penStrokes = new List<PenStroke>();
 
-            points=new List<Point>();
+            points = new List<Point>();
             path = new Path();
             path.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
             path.StrokeThickness = sliderPenWidth.Value;
-          
+
             pathGeometry = new PathGeometry();
-            pathFigure = new PathFigure();
-            pathGeometry.Figures.Add(pathFigure);
+
 
             path.Data = pathGeometry;
             canvas.Children.Add(path);
@@ -164,127 +184,42 @@ namespace PenDemo
 
         private int index;
         PathFigure pathFigure;
-        Stopwatch stopwatch=new Stopwatch();
+        Stopwatch stopwatch = new Stopwatch();
         public void drawLine(int nPenStatus, int x, int y, int nCompress)
         {
             Point p = new Point(x, y);
-            if (!pointIsInvalid(nPenStatus, p))
+          
+            if (points.Count == 0  )
             {
-                return;
+                pathFigure = new PathFigure();
+              
+                IsHaveLastPoint = true;
+                startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
             }
 
-            if (nPenStatus == 0)
+            if (isHaveLastControlPoint)
             {
-                if (points.Count > 0)
-                {
-//                    Console.WriteLine(DateTime.Now.Ticks);
-                    endTime = (DateTime.Now.Ticks-dtFrom.Ticks)/10000;
-                    var penStroke = new PenStroke {points = points};
-                    penStroke.startTime = startTime;
-                    penStroke.endTime = endTime;
-                    penStrokes.Add(penStroke);
-                   
-                }
-
-                isHaveLastControlPoint = false;
-                index = 0;
-                points = new List<Point>();
-                IsHaveLastPoint = false;
+                pathFigure.StartPoint = lastControlPoint;
             }
             else
             {
-                if (points.Count == 0)
-                {
-                  
-                    pathFigure.StartPoint = p;
-                    IsHaveLastPoint = true;
-                    startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
-                }
-
-                double distance = 0;
-                //if (points.Count>0)
-                //{
-                //    distance = Math.Sqrt((p.X - points[points.Count - 1].X) * (p.X - points[points.Count - 1].X) +
-                //                         (p.Y - points[points.Count - 1].Y) * (p.Y - points[points.Count - 1].Y));
-
-                //    Console.WriteLine("distance:" + distance);
-                //}
-
-                //if (distance > 1 || points.Count == 0)
-                //{
-                    points.Add(p);
-//                    if (IsHaveLastPoint && points.Count > 2)
-//                    {
-//                        //                        var copyIndex = index;
-//                        //                        this.Dispatcher.BeginInvoke(DispatcherPriority.Background,
-//                        //                            new Action(() => {  }));
-//                        stopwatch.Start();
-//                       
-//                        drawLine(points[points.Count - 3], points[points.Count - 2], points[points.Count-1]);
-//                        stopwatch.Stop();
-//                        Console.WriteLine("stopwatch.ElapsedMilliseconds:" + stopwatch.ElapsedMilliseconds);
-//                       //                        DispatcherHelper.DoEvents();
-//                       //LineGeometry lineGeometry = new LineGeometry(lastPoint, p);
-//                       //                  
-//                       //geometryGroup.Children.Add(lineGeometry);
-//                       Console.WriteLine("{0},{1}|{2},{3}", lastPoint.X, lastPoint.Y, p.X, p.Y);
-//                    }
-                    if (IsHaveLastPoint && points.Count > 1)
-                    {
-                        //                        var copyIndex = index;
-                        //                        this.Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                        //                            new Action(() => {  }));
-                        stopwatch.Start();
-
-                        drawLine( points[points.Count - 2], points[points.Count - 1]);
-                        stopwatch.Stop();
-                        Console.WriteLine("stopwatch.ElapsedMilliseconds:" + stopwatch.ElapsedMilliseconds);
-                        //                        DispatcherHelper.DoEvents();
-                        //LineGeometry lineGeometry = new LineGeometry(lastPoint, p);
-                        //                  
-                        //geometryGroup.Children.Add(lineGeometry);
-                        Console.WriteLine("{0},{1}|{2},{3}", lastPoint.X, lastPoint.Y, p.X, p.Y);
-                    }
-                    lastPoint = p;
-
-                  
-                //}
-               
-               
+                pathFigure.StartPoint = p;
             }
-          
+            points.Add(p);
+           
+            if (IsHaveLastPoint && points.Count > 1)
+            {
+                drawLine(points[points.Count - 2], points[points.Count - 1]);
+            }
+            lastPoint = p;
 
         }
 
-        public static class DispatcherHelper
-        {
-            [SecurityPermissionAttribute(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public static void DoEvents()
-            {
-                DispatcherFrame frame = new DispatcherFrame();
-                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
-                    new DispatcherOperationCallback(ExitFrames), frame);
-                try
-                {
-                    Dispatcher.PushFrame(frame);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
 
-            private static object ExitFrames(object frame)
-            {
-                ((DispatcherFrame) frame).Continue = false;
-                return null;
-            }
 
-        }
-
-      
         private bool isHaveLastControlPoint;
         private Point lastControlPoint;
-        private void drawLine(Point p1,Point p2,Point p3)
+        private void drawLine(Point p1, Point p2, Point p3)
         {
 
             List<Point> controlPoints = BezierHelper.getControlPoints(0.3, p1, p2, p3);
@@ -326,7 +261,7 @@ namespace PenDemo
 
             //pathFigure.Segments.Add(lineSegment);
             //            Graphics.FromHwnd(this)
-
+            lastControlPoint = controlPoints[1];
         }
 
 
@@ -347,8 +282,8 @@ namespace PenDemo
 
         private void SliderPenWidth_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if(path!=null)
-            path.StrokeThickness = sliderPenWidth.Value;
+            if (path != null)
+                path.StrokeThickness = sliderPenWidth.Value;
         }
     }
 }

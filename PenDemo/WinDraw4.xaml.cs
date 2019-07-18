@@ -26,21 +26,22 @@ namespace PenDemo
     /// <summary>
     /// WinDraw.xaml 的交互逻辑
     /// </summary>
-    public partial class WinDraw3 : Window
+    public partial class WinDraw4 : Window
     {
-        private static WinDraw3 instance;
-        private GeometryGroup geometryGroup;
+        private static WinDraw4 instance;
         private List<PenStroke> penStrokes;
 
         private List<Point> points;
         private Point m_point;
         private int m_nPenStatus = 0;
-        private Path path;
-        public static WinDraw3 getInstance()
+        private StylusPointCollection stylusPointCollection;
+        private Stroke stroke;
+        private int brushWidth = 3;
+        public static WinDraw4 getInstance()
         {
             if (instance == null)
             {
-                instance = new WinDraw3();
+                instance = new WinDraw4();
                 instance.WindowState = WindowState.Maximized;
                 instance.Activate();
             }
@@ -48,7 +49,7 @@ namespace PenDemo
             return instance;
         }
 
-        public WinDraw3()
+        public WinDraw4()
         {
             InitializeComponent();
 
@@ -67,7 +68,7 @@ namespace PenDemo
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
-            geometryGroup.Children.Clear();
+            ic.Strokes.Clear();
         }
 
         private void BtnReplay_Click(object sender, RoutedEventArgs e)
@@ -95,7 +96,7 @@ namespace PenDemo
                             Point p = penStroke.points[ii];
                             if (ii == 0) lastPoint = p;
 
-                            drawLine(lastPoint, p);
+//                            drawLine(lastPoint, p);
                             lastPoint = p;
                         }));
                     }
@@ -110,17 +111,7 @@ namespace PenDemo
             penStrokes = new List<PenStroke>();
 
             points = new List<Point>();
-            path = new Path();
-            path.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            path.StrokeThickness = sliderPenWidth.Value;
-
-
-
-
-            geometryGroup = new GeometryGroup();
-
-            path.Data = geometryGroup;
-            canvas.Children.Add(path);
+            ic.EditingMode = InkCanvasEditingMode.None;
         }
 
         private Point lastPoint;
@@ -128,11 +119,8 @@ namespace PenDemo
         private long startTime;
         private long endTime;
         private DateTime dtFrom = new DateTime(2019, 1, 1, 0, 0, 0, 0);
-
-        private int index;
-        PathFigure pathFigure;
-        Stopwatch stopwatch = new Stopwatch();
-        public void drawLine(int nPenStatus, int x, int y, int nCompress)
+        private int startCount = 0;
+        public void drawLine(int nPenStatus, int x, int y, float nCompress)
         {
             Point p = new Point(x, y);
             if (!pointIsInvalid(nPenStatus, p))
@@ -140,104 +128,45 @@ namespace PenDemo
                 return;
             }
 
-            if (nPenStatus == 0)
+            if (nPenStatus == 0)//离笔
             {
-                if (points.Count > 0)
-                {
-                    //                    Console.WriteLine(DateTime.Now.Ticks);
-                    endTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
-                    var penStroke = new PenStroke { points = points };
-                    penStroke.startTime = startTime;
-                    penStroke.endTime = endTime;
-                    penStrokes.Add(penStroke);
-
-                }
-
-                isHaveLastControlPoint = false;
-                index = 0;
-                points = new List<Point>();
                 IsHaveLastPoint = false;
+                startCount = 0;
             }
             else
             {
-                if (IsHaveLastPoint)
+                startCount++;
+                if (!IsHaveLastPoint)
                 {
-                    drawLine(lastPoint, p);
-                }
-                if (points.Count == 0)
-                {
+                    stylusPointCollection = new StylusPointCollection();
+                    stylusPointCollection.Add(new StylusPoint(x, y,0.1f));
+                    Console.WriteLine("draw4：{0},{1},{2}",x,y,nCompress);
+                    stroke = new Stroke(stylusPointCollection);
+                    stroke.DrawingAttributes = new DrawingAttributes { Width = brushWidth, Height = brushWidth, Color = Color.FromRgb(0, 0, 0) };
                     IsHaveLastPoint = true;
-                    startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
-
+                    ic.Strokes.Add(stroke);
                 }
-
-            
-
-                lastPoint = p;
-                points.Add(p);
-
-
-
+                else
+                {
+                    if (startCount < 3)
+                    {
+                        stylusPointCollection.Add(new StylusPoint(x, y, 0.1f));
+                    }
+                    else
+                    {
+                        stylusPointCollection.Add(new StylusPoint(x, y, nCompress));
+                    }
+                   
+                    Console.WriteLine("draw4：{0},{1},{2}", x, y, nCompress);
+                }
             }
-
-
         }
 
 
 
-        private bool isHaveLastControlPoint;
-        private Point lastControlPoint;
-        private void drawLine(Point p1, Point p2, Point p3)
-        {
-
-            List<Point> controlPoints = BezierHelper.getControlPoints(0.3, p1, p2, p3);
-            if (isHaveLastControlPoint == false)
-            {
-                lastControlPoint = p1;
-                isHaveLastControlPoint = true;
-            }
-            BezierSegment bezierSegment = new BezierSegment(lastControlPoint, controlPoints[0], p2, true);
-
-            lastControlPoint = controlPoints[1];
-            pathFigure.Segments.Add(bezierSegment);
-
-
-
-        }
-        private void drawLine(Point p1, Point p2)
-        {
-
-            List<Point> controlPoints = BezierHelper.getControlPoints(0.4, p1, p2);
-            if (isHaveLastControlPoint == false)
-            {
-                lastControlPoint = p1;
-                isHaveLastControlPoint = true;
-            }
-            //先画bezier，再画直线
-            //                        QuadraticBezierSegment bezierSegment = new QuadraticBezierSegment(p1, controlPoints[0],  true);
-            //
-            //                        lastControlPoint = controlPoints[1];
-            //                        pathFigure.Segments.Add(bezierSegment);
-            //            LineSegment lineSegment = new LineSegment(controlPoints[1], true);
-            //            pathFigure.Segments.Add(lineSegment);
-
-
-
-            StreamGeometry streamGeometry = new StreamGeometry();
-            using (StreamGeometryContext ctx = streamGeometry.Open())
-            {
-                ctx.BeginFigure(lastControlPoint, false, false);
-                ctx.QuadraticBezierTo(p1,controlPoints[0],true,true);
-                ctx.LineTo(controlPoints[1], true, true);
-
-            }
-
-            lastControlPoint = controlPoints[1];
-            geometryGroup.Children.Add(streamGeometry);
-
-            
-
-        }
+ 
+    
+      
 
 
         private bool pointIsInvalid(int nPenStatus, Point pointValue)
@@ -255,10 +184,6 @@ namespace PenDemo
             e.Cancel = true;
         }
 
-        private void SliderPenWidth_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (path != null)
-                path.StrokeThickness = sliderPenWidth.Value;
-        }
+     
     }
 }

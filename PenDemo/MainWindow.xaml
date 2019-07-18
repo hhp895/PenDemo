@@ -59,6 +59,8 @@
             <Button x:Name="btnStart">开始</Button>
             <Button x:Name="btnTest">Test</Button>
             <Button x:Name="btnTest2">Test2</Button>
+            <Button x:Name="btnTest3">Test3</Button>
+            <Button x:Name="btnTest4">Test4</Button>
         </StackPanel>
         <ListBox x:Name="lbPenPads"   Grid.Row="1" ItemContainerStyle="{DynamicResource Contents_ListBox_Item}" >
          
