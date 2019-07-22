@@ -93,7 +93,7 @@ namespace PenDemo
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                         {
                             Thread.Sleep(everySleepTime);
-                            Point p = penStroke.points[ii];
+                            Point p = penStroke.points[ii].Point;
                             if (ii == 0) lastPoint = p;
 
 //                            drawLine(lastPoint, p);

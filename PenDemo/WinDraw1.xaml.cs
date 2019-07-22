@@ -33,7 +33,7 @@ namespace PenDemo
         private PathGeometry pathGeometry;
         private List<PenStroke> penStrokes;
 
-        private List<Point> points;
+        private List<MyPoint> points;
         private Point m_point;
         private int m_nPenStatus = 0;
         private Path path;
@@ -93,7 +93,7 @@ namespace PenDemo
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                         {
                             Thread.Sleep(everySleepTime);
-                            Point p = penStroke.points[ii];
+                            Point p = penStroke.points[ii].Point;
                             if (ii == 0) lastPoint = p;
 
                             drawLine(lastPoint, p);
@@ -110,7 +110,7 @@ namespace PenDemo
         {
             penStrokes = new List<PenStroke>();
 
-            points=new List<Point>();
+            points=new List<MyPoint>();
             path = new Path();
             path.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
             path.StrokeThickness = sliderPenWidth.Value;
@@ -154,7 +154,7 @@ namespace PenDemo
 
                 isHaveLastControlPoint = false;
                 index = 0;
-                points = new List<Point>();
+                points = new List<MyPoint>();
                 IsHaveLastPoint = false;
             }
             else
@@ -180,7 +180,7 @@ namespace PenDemo
 
                 //if (distance > 1 || points.Count == 0)
                 //{
-                    points.Add(p);
+                    points.Add(new MyPoint {Point= p,Pressure = nCompress });
 //                    if (IsHaveLastPoint && points.Count > 2)
 //                    {
 //                        //                        var copyIndex = index;
@@ -204,7 +204,7 @@ namespace PenDemo
                         //                            new Action(() => {  }));
                         stopwatch.Start();
 
-                        drawLine( points[points.Count - 2], points[points.Count - 1]);
+                        drawLine( points[points.Count - 2].Point, points[points.Count - 1].Point);
                         stopwatch.Stop();
                         Console.WriteLine("stopwatch.ElapsedMilliseconds:" + stopwatch.ElapsedMilliseconds);
                         //                        DispatcherHelper.DoEvents();

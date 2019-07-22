@@ -79,8 +79,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\MyPoint.cs" />
     <Compile Include="Model\PenStroke.cs" />
     <Compile Include="Util\BezierHelper.cs" />
+    <Compile Include="WinDraw5.xaml.cs">
+      <DependentUpon>WinDraw5.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDraw4.xaml.cs">
       <DependentUpon>WinDraw4.xaml</DependentUpon>
     </Compile>
@@ -117,6 +121,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WinDraw5.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="WinDraw4.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

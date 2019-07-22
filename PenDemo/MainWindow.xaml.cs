@@ -31,7 +31,7 @@ namespace PenDemo
         private bool isStart = false;
         private List<Device> devices;
 
-        public WinDraw4 WinDraw4 = null;
+        public WinDraw5 WinDraw5 = null;
 
         public MainWindow()
         {
@@ -152,9 +152,9 @@ namespace PenDemo
             Console.WriteLine("DeviceMac:{0},status:{1},x:{2},y:{3},up:{4}", sMac, npenStatus, ux, uy, up);
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (WinDraw4.Visibility == Visibility.Visible)
+                if (WinDraw5.Visibility == Visibility.Visible)
                 {
-                    WinDraw4.drawLine(npenStatus, ux/22, uy/22, up/1024.0f);
+                    WinDraw5.drawLine(npenStatus, ux/22, uy/22, up/1024.0f);
                 }
             }));
         }
@@ -192,7 +192,7 @@ namespace PenDemo
 
         private void initView()
         {
-            WinDraw4 = WinDraw4.getInstance();
+            WinDraw5 = WinDraw5.getInstance();
 
 
             string HostName = Dns.GetHostName();
@@ -223,7 +223,7 @@ namespace PenDemo
             ListBoxItem item = sender as ListBoxItem;
             Console.WriteLine("" + item.Content);
 
-            WinDraw4.Show();
+            WinDraw5.Show();
             this.WindowState=WindowState.Minimized;
         }
     }

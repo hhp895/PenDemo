@@ -1,4 +1,4 @@
-﻿<Window x:Class="PenDemo.WinDrawTest4"
+﻿<Window x:Class="PenDemo.WinDraw5"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,14 +7,11 @@
         mc:Ignorable="d"
         Title="WinDraw" Height="300" Width="300" Closing="Window_Closing">
     <Grid>
-            <InkCanvas x:Name="inkCanvas"  />
-        <!-- <Slider Width="200" Maximum="10" Value="5" Minimum="1" x:Name="sliderPenWidth" ValueChanged="SliderPenWidth_OnValueChanged"></Slider> -->
-       <StackPanel Orientation="Horizontal" Height="30" VerticalAlignment="Top">
+            <InkCanvas x:Name="ic"  />
+       
+       <StackPanel Orientation="Horizontal">
            <Button Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="btnClear">Clear</Button>
            <Button Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="btnReplay">Replay</Button>
-           <Button Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="btnStroke">Stroke</Button>
-           <Button Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="btnQuadratciBezier">Bezier</Button>
-           <TextBox x:Name="txtCount" Text="50"></TextBox>
         </StackPanel>
        
     </Grid>

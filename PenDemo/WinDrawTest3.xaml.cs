@@ -33,7 +33,7 @@ namespace PenDemo
         private PathGeometry pathGeometry;
         private List<PenStroke> penStrokes;
 
-        private List<Point> points;
+        private List<MyPoint> points;
         private Point m_point;
         private int m_nPenStatus = 0;
         private Path path;
@@ -83,7 +83,7 @@ namespace PenDemo
 
             isHaveLastControlPoint = false;
             index = 0;
-            points = new List<Point>();
+            points = new List<MyPoint>();
             IsHaveLastPoint = false;
 
             isPress = false;
@@ -98,7 +98,7 @@ namespace PenDemo
                 Point p = e.GetPosition(canvas);
                 drawLine(oldPoint, p);
                 oldPoint = p;
-                points.Add(p);
+                points.Add(new MyPoint { Point = p, Pressure = 0 });
             }
         }
 
@@ -148,7 +148,7 @@ namespace PenDemo
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                         {
                             Thread.Sleep(everySleepTime);
-                            Point p = penStroke.points[ii];
+                            Point p = penStroke.points[ii].Point;
                             if (ii == 0) lastPoint = p;
 
                             drawLine(lastPoint, p);
@@ -166,7 +166,7 @@ namespace PenDemo
             this.WindowState = WindowState.Maximized;
             penStrokes = new List<PenStroke>();
 
-            points = new List<Point>();
+            points = new List<MyPoint>();
             createPath(5);
         }
 
@@ -209,11 +209,11 @@ namespace PenDemo
             {
                 pathFigure.StartPoint = p;
             }
-            points.Add(p);
+            points.Add(new MyPoint { Point = p, Pressure = nCompress });
            
             if (IsHaveLastPoint && points.Count > 1)
             {
-                drawLine(points[points.Count - 2], points[points.Count - 1]);
+                drawLine(points[points.Count - 2].Point, points[points.Count - 1].Point);
             }
             lastPoint = p;
 

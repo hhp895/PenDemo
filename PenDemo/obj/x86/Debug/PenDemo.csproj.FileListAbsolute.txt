@@ -50,3 +50,5 @@ C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest4.g.cs
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDrawTest4.baml
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw4.g.cs
 C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw4.baml
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw5.g.cs
+C:\Study\Net\PenDemo\PenDemo\obj\x86\Debug\WinDraw5.baml

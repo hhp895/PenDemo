@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Windows;
+using Point = System.Windows.Point;
 
 namespace PenDemo.Util
 {
@@ -61,5 +62,80 @@ namespace PenDemo.Util
             controlPoints.Add(p2);
             return controlPoints;
         }
+
+        public static Point getBezierInterpolationPoint(float t, Point[] points, int count)
+        {
+            if (points.Length < 1)
+            {
+               throw new ArgumentOutOfRangeException();
+            }
+            Point[] tmp_points=new Point[count];
+            for (int i = 1; i < count; i++)
+            {
+                for (int j = 0; j < count-i; j++)
+                {
+                    if (i == 1)
+                    {
+                        float x1 =(float) (points[j].X * (1 - t) + points[j + 1].X * t);
+                        float y1= (float)(points[j].Y * (1 - t) + points[j + 1].Y * t);
+                        tmp_points[j]=new Point {X=x1,Y=y1};
+                      
+                    }
+                    else
+                    {
+                        float x = (float) (tmp_points[j].X * (1 - t) + tmp_points[j + 1].X * t);
+                        float y = (float) (tmp_points[j].Y * (1 - t) + tmp_points[j + 1].Y * t);
+                        tmp_points[j]=new Point {X=x,Y=y};
+                    }
+                }
+
+                
+            }
+            return tmp_points[0];
+        }
+
+        public static List<Point> getBezierCurvesPoints(List<Point> points, float step)
+        {
+            List<Point> bezierCurvesPoints=new List<Point>();
+            float t = 0f;
+            do
+            {
+                Point tmp_point = getBezierInterpolationPoint(t, points.ToArray(), points.Count);
+                t += step;
+                bezierCurvesPoints.Add(tmp_point);
+
+            } while (t <= 1 && points.Count > 1);
+
+            return bezierCurvesPoints;
+
+        }
+
+        public static double getQuadraticBezierInterpolation(double z0, double z1, double z2, double t)
+        {
+            double a1 = (double) ((1.0 - t) * (1.0 - t) * z0);
+            double a2 = (double) (2.0*t*(1-t)*z1);
+            double a3 = (double) (t*t*z2);
+            double a4 = a1 + a2 + a3;
+            return a4;
+        }
+
+        public static List<Point> getQuadraticBezierPoints(Point p1, Point p2, Point p3, int steps)
+        {
+            List<Point> points=new List<Point>();
+            float stepLength = 1.0f / steps;
+            float t = 0f;
+            while (t <= 1)
+            {
+                double x = getQuadraticBezierInterpolation(p1.X, p2.X, p3.X,t);
+                double y = getQuadraticBezierInterpolation(p1.Y, p2.Y, p3.Y,t);
+                points.Add(new Point {X=x,Y=y});
+                t = t + stepLength;
+            }
+
+            return points;
+        }   
+
+
+       
     }
 }

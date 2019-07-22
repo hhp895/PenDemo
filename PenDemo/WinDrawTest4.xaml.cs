@@ -62,6 +62,7 @@ namespace PenDemo
             this.btnReplay.Click += BtnReplay_Click;
             this.btnClear.Click += BtnClear_Click;
             this.btnStroke.Click += BtnStroke_Click;
+            this.btnQuadratciBezier.Click += BtnQuadratciBezier_Click; ;
             da = new DrawingAttributes
             {
                 Width = 125,
@@ -73,6 +74,25 @@ namespace PenDemo
             //            this.PreviewMouseLeftButtonDown += Canvas_PreviewMouseDown;
             //            this.PreviewMouseMove += Canvas_PreviewMouseMove;
             //            this.PreviewMouseLeftButtonUp += Canvas_PreviewMouseUp;
+        }
+
+        private void BtnQuadratciBezier_Click(object sender, RoutedEventArgs e)
+        {
+            this.inkCanvas.Strokes.Clear();
+            Point p1=new Point() {X=200,Y=400};
+            Point p2=new Point() {X=300,Y=200};
+            Point p3=new Point() {X=400,Y=400};
+
+            List<Point> points = BezierHelper.getQuadraticBezierPoints(p1,p2,p3, Convert.ToInt16(txtCount.Text));
+            StylusPointCollection stylusPointCollection = new StylusPointCollection();
+            for (int i = 0; i < points.Count; i++)
+            {
+                stylusPointCollection.Add(new StylusPoint(points[i].X,points[i].Y));
+            }
+            Stroke stroke = new Stroke(stylusPointCollection);
+            stroke.DrawingAttributes = new DrawingAttributes { Width = 1, Height = 1, Color = Color.FromRgb(0, 0, 0) };
+            this.inkCanvas.Strokes.Add(stroke);
+
         }
 
         private void BtnStroke_Click(object sender, RoutedEventArgs e)

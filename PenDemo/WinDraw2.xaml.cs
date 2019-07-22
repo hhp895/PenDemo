@@ -27,7 +27,7 @@ namespace PenDemo
 
         private List<PenStroke> penStrokes;
 
-        private List<Point> points;
+        private List<MyPoint> points;
         private Point m_point;
         private int m_nPenStatus = 0;
         private Path path;
@@ -85,7 +85,7 @@ namespace PenDemo
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                         {
                             Thread.Sleep(everySleepTime);
-                            Point p = penStroke.points[ii];
+                            Point p = penStroke.points[ii].Point;
                             if (ii == 0) lastPoint = p;
 
                             drawLine(lastPoint, p);
@@ -102,7 +102,7 @@ namespace PenDemo
         {
             penStrokes = new List<PenStroke>();
 
-            points=new List<Point>();
+            points=new List<MyPoint>();
             path = new Path();
             path.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
             path.StrokeThickness = sliderPenWidth.Value;
@@ -138,7 +138,7 @@ namespace PenDemo
 
                 }
 
-                points = new List<Point>();
+                points = new List<MyPoint>();
 //                startTime = DateTime.Now.Ticks;
                 IsHaveLastPoint = false;
             }
@@ -161,7 +161,7 @@ namespace PenDemo
                     startTime = (DateTime.Now.Ticks - dtFrom.Ticks) / 10000;
                 }
                 lastPoint = p;
-                points.Add(p);
+                points.Add(new MyPoint { Point = p, Pressure = nCompress });
             }
           
 

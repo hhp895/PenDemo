@@ -10,6 +10,6 @@ namespace PenDemo.Model
     {
         public long startTime;
         public long endTime;
-        public List<Point> points { get; set; }
+        public List<MyPoint> points { get; set; }
     }
 }
